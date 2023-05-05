@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.crud.practise.model.CategoryDetails;
+import com.crud.practise.model.CourseContent;
 import com.crud.practise.model.FinalResponse;
 import com.crud.practise.repository.CategoryRepository;
 import com.crud.practise.service.CategoryService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryRepository repository;
-
+	
 	Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
 	@Override
@@ -81,15 +85,14 @@ public class CategoryServiceImpl implements CategoryService {
 		} catch (InputMismatchException e) {
 			logger.error("Cannot fetcht the Category Details by Id " + categoryId + e.getMessage());
 		}
-
 		finalResponse.setStatus(false);
 		finalResponse.setStatusCode("501");
 		finalResponse.setMessage("Records not Available");
 		return finalResponse;
-
 	}
 
 	@Override
+	@Transactional
 	public FinalResponse insertCategoryDetails(CategoryDetails categoryDetails) {
 		FinalResponse finalResponse = new FinalResponse();
 		logger.info("Inserting one Recored::input::categoryDetails: " + categoryDetails);
@@ -109,6 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	@Transactional
 	public FinalResponse updateDetailsById(int categoryId, CategoryDetails categoryDetails) {
 		logger.info("Updating Category Details by Id: " + categoryId);
 		FinalResponse finalResponse = new FinalResponse();
@@ -133,6 +137,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	@Transactional
 	public FinalResponse deleteDetailsById(int categoryId) {
 		logger.info("deleteDetailsById : input" + categoryId);
 		FinalResponse finalResponse = new FinalResponse();
@@ -178,4 +183,64 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		
 	}
+
+	@Override
+	public FinalResponse saveCourseContent(CourseContent courseContent, JSONObject categoryDocument) {
+		logger.info("saveCourseContent : input" + courseContent.getCategoryId());
+		FinalResponse finalResponse = new FinalResponse();
+		Object courseContentObj = null;
+		try {
+			courseContentObj = repository.saveContent(courseContent, categoryDocument );
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		if (courseContentObj != null) {
+			finalResponse.setStatus(true);
+			finalResponse.setStatusCode("201");
+			finalResponse.setMessage("Record is inserted");
+			finalResponse.setData(courseContentObj);
+			return finalResponse;
+		} else {
+			finalResponse.setStatus(true);
+			finalResponse.setStatusCode("501");
+			finalResponse.setErrorMessage("Record is not inserted");
+			return finalResponse;
+		}
+	}
+
+	@Override
+	public FinalResponse getCourseById(int categoryId) {
+		FinalResponse finalResponse = new FinalResponse();
+		LinkedHashMap<String, Object> course = null;
+		try {
+			List<Object[]> courseList = repository.getCourseDetailsById(categoryId);
+			course = new LinkedHashMap<>();
+			for (Object[] obj : courseList) {
+				String catId = String.valueOf(obj[0]);
+				course.put("categoryId", Integer.valueOf(catId));
+				byte[] byteData = String.valueOf(obj[1]).getBytes();
+				
+				System.out.println(byteData);
+				JSONObject jsonObject = new JSONObject();
+				System.out.println(jsonObject);
+				course.put("categoryDocument", jsonObject );
+				course.put("contentVideo", String.valueOf(obj[2]));
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		if (course != null) {
+			finalResponse.setStatus(true);
+			finalResponse.setStatusCode("200");
+			finalResponse.setMessage("Records Available");
+			finalResponse.setData(course);
+			return finalResponse;
+		}
+		finalResponse.setStatus(false);
+		finalResponse.setStatusCode("501");
+		finalResponse.setMessage("Records not Available");
+		return finalResponse;
+	}
+
+	
 }

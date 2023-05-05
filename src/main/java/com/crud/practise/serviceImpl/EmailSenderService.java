@@ -12,6 +12,10 @@ public class EmailSenderService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
+//	@Value("${spring.mail.username}")
+	@SuppressWarnings("unused")
+	private String senderEmail;
+	
 	
 	// Simple Mail Transfer Protocol is an Internet standard communication protocol for electronic mail transmission.
 	public Boolean sendEmail(String toEmail, String subject, String body) {
@@ -32,8 +36,8 @@ public class EmailSenderService {
 			System.out.println("Mail sent successfully...");
 			return status;
 		}else {
-			System.out.println("Unable to send mail...");
-			return status = false;
+			System.out.println("Error occured in sending mail...");
+			return status;
 		}
 	}
 }

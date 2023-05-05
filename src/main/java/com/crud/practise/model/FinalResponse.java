@@ -1,5 +1,6 @@
 package com.crud.practise.model;
 
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,5 +13,6 @@ public class FinalResponse {
 	public String message;
 	public String errorMessage;
 	public Object data;
+//	public JSONObject jsonData;
 
 }

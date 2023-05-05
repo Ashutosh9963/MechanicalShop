@@ -24,9 +24,9 @@ public class EmailWithAttacmentService {
 	
 	public void sendEmailWithAttacment(String toEmail, String subject, String body, String attachment) {
 		
-		// create an instance of Mimemessage 
+		// creating an instance of Mimemessage 
 		MimeMessage message = mailSender.createMimeMessage();
-		// create an instance of Mi
+		
 		try {
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
 			mimeMessageHelper.setFrom("ashutosh.at46@gmail.com");

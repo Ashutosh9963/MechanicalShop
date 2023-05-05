@@ -1,5 +1,5 @@
 package com.crud.practise.utility;
-import java.net.URI;
+import java.net.URI; 
 import java.net.URISyntaxException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import com.twilio.type.PhoneNumber;
 public class SendSMS {
 	
 	private final String TWILIO_ACCOUNT_SID = "AC14cee21341f7ca9ae9d0b7bbd8cabe73";
-	private final String TWILIO_AUTH_TOKEN = "253cbddf640d81ced96603324220948c";
+	private final String TWILIO_AUTH_TOKEN = "8c26ad5c033544316d7799c3f0ce67ae";
 	
 	public ResponseEntity<String> sendSMS(String textSMS) {
 		// to initialize the twilio account with SID and TOKEN

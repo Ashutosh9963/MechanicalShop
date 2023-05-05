@@ -7,14 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.crud.practise.model.CategoryDetails;
+import com.crud.practise.model.CourseContent;
 import com.crud.practise.model.FinalResponse;
 import com.crud.practise.serviceImpl.CategoryServiceImpl;
-import com.google.common.net.MediaType;
 
 import jakarta.validation.Valid;
 
@@ -56,6 +54,17 @@ public class CategoryController {
 	public FinalResponse fileOfCertificate( CategoryDetails categoryDetails) {
 		return categoryServiceImpl.uploadCertificate(categoryDetails.getCategoryId(), categoryDetails.getCertificate());
 	}
+	
+	@PostMapping("/saveCourseContent")
+	public FinalResponse saveCourseContent(@RequestBody CourseContent courseContent) {
+		return categoryServiceImpl.saveCourseContent(courseContent, courseContent.getCategoryDocument());
+	}
+	
+	@GetMapping("/getCourseDetailsById/{id}")
+	public FinalResponse getCourseDetailsById(@PathVariable int id) {
+		return categoryServiceImpl.getCourseById(id);
+	}
+	
 	
 	
 	

@@ -76,6 +76,7 @@ public class EmployeesController {
 		return employeeService.validatingToken(token, login);
 	}
 	
+	// API to send text mail 
 	@PostMapping("/sendMail")
 	public FinalResponse sendMyMail(@RequestBody @Valid  EmailSender emailSender) {
 		return employeeService.generateEmail(emailSender);
@@ -83,7 +84,8 @@ public class EmployeesController {
 	
 	@PostMapping("/sendMailWithAttachment")
 	public String sendMailWithAttachment(@RequestBody EmailWithAttachment emailWithAttachment) {
-		emailWithAttacmentService.sendEmailWithAttacment(emailWithAttachment.getToEmail(),
+		emailWithAttacmentService.sendEmailWithAttacment(
+				emailWithAttachment.getToEmail(),
 				emailWithAttachment.getSubject(), 
 				emailWithAttachment.getBody(),
 				emailWithAttachment.getAttachmentPath());

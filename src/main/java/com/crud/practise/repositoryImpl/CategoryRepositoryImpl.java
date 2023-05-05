@@ -10,11 +10,13 @@ import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.crud.practise.model.CategoryDetails;
+import com.crud.practise.model.CourseContent;
 import com.crud.practise.repository.CategoryRepository;
 
 import jakarta.persistence.EntityManager;
@@ -134,6 +136,44 @@ public class CategoryRepositoryImpl  implements CategoryRepository{
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public CourseContent saveContent(CourseContent courseContent, JSONObject categoryDocument) {
+		Query query = entityManager
+				.createNativeQuery("INSERT INTO COURSECONTENT ( CATEGORYDOCUMENT, CONTENTVIDEO ) VALUES  (?, ?) ");
+		String stringData = categoryDocument.toString();
+		int result = 0 ;
+		try {
+			byte[] byteData = stringData.getBytes();
+			Blob blobData = new SerialBlob(byteData);
+//			JSONObject jsonObject = new JSONObject(blobData);
+			System.out.println(blobData);
+			query.setParameter(1, blobData);
+			query.setParameter(2, courseContent.getContentVideo());
+			result = query.executeUpdate();
+		} 
+		 catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (result == 1) {
+			return courseContent;
+		} return null;
+		
+	}
+
+	@Override
+	public  List<Object[]> getCourseDetailsById(int categoryId) {
+		Query query = entityManager.createNativeQuery("SELECT * FROM coursecontent WHERE CATEGORYID = ? ");
+		query.setParameter(1, categoryId );
+		 List<Object[]> categoryDetail = null;
+		try {
+			categoryDetail =  query.getResultList();
+		} catch (InputMismatchException e) {
+			e.getMessage();
+		}
+		return categoryDetail;
 	}
 	
 	

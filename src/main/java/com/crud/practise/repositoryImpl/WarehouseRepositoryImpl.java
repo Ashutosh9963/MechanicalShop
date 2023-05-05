@@ -121,7 +121,6 @@ public class WarehouseRepositoryImpl implements WarehouseRepository {
 			query.executeUpdate();
 		}
 		return warehouse;
-		
 	}
 
 }
